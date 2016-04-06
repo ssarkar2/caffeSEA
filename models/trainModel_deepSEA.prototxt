@@ -1,0 +1,23 @@
+#depSEA caffe model prototxt
+
+name: "deepSEA"
+
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"  
+  transform_param {
+  mirror: true
+  mean_file: "/scratch0/sem4/data/lfw_cropped/lfwcrop_color/splitData/imgMean.binaryproto"
+  }
+  include {
+    phase: TRAIN
+  }
+  data_param {
+    source: "/scratch0/sem4/data/lfw_cropped/lfwcrop_color/splitData/lmdb/x_train"
+    backend: LMDB
+    batch_size: 64
+  }
+}
+
