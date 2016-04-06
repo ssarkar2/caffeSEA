@@ -15,9 +15,9 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode):
     print getDataNames(matdata.keys())
     
     with h5py.File(fullFileName,'w') as f:  
-        dataH5 = f.create_dataset(matDataName, matdata[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer. #chunking enabled
+        dataH5 = f.create_dataset('data', matdata[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer. #chunking enabled
         dataH5[...] = matdata[matDataName]  #(10000, 4, 1000)
-        labelH5 = f.create_dataset(matLabelName, matdata[matLabelName].shape, dtype='i1') 
+        labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1') 
         labelH5[...] = matdata[matLabelName]  #(10000, 919)
 
     

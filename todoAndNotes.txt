@@ -1,0 +1,6 @@
+1) 
+in torch this is used:
+model:add(nn.Threshold(0, 1e-6):cuda())  --if data<0, then data = 1e-6 AFAIU
+
+Relu in caffe cant do there. It cant at most do something like:
+model:add(nn.Threshold(0, 0):cuda())
