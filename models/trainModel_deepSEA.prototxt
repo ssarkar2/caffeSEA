@@ -209,5 +209,74 @@ layer {
 }
 
 
+#width = 10000
+#floor((floor((width-7)/4.0)-7)/4.0)-7 = 53
+#nchannel = math.floor((math.floor((width-7)/4.0)-7)/4.0)-7
+#model:add(nn.Reshape(nkernels[3]*nchannel))
+#noutputs = 919
+
+layer {
+  name: "fc4"
+  type: "InnerProduct"
+  bottom: "drop3"
+  top: "fc4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 919
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
 
 
+#model:add(nn.Threshold(0, 1e-6):cuda())
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "fc4"
+  top: "fc4"
+}
+
+#model:add(nn.Linear(noutputs , noutputs):cuda())
+layer {
+  name: "fc5"
+  type: "InnerProduct"
+  bottom: "fc4"
+  top: "fc5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 919
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+
+#do the last sigmoidal step
+#use SigmoidCrossEntropyLossLayer for this line: criterion = nn.BCECriterion()
+#how to do: --L1 penalty to last layer (as mentioned in 3_loss.lua)
