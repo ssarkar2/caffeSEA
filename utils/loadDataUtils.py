@@ -12,7 +12,7 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode):
     
     matdata = sio.loadmat(matData)
     [matDataName, matLabelName] = getDataNames(matdata.keys())
-    print getDataNames(matdata.keys())
+    #print getDataNames(matdata.keys())
     
     with h5py.File(fullFileName,'w') as f:  
         dataH5 = f.create_dataset('data', matdata[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer. #chunking enabled
