@@ -296,4 +296,15 @@ layer {
   top: "loss"
 }
 
+#layer {
+#  name: "acc"
+#  type: "Accuracy"
+#  bottom: "sigmoid"
+#  bottom: "label"
+#  top: "acc"
+#  include {
+#    phase: TEST
+#  }
+#}
+
 #how to do: --L1 penalty to last layer (as mentioned in 3_loss.lua)
