@@ -7,8 +7,8 @@ from utils.caffeUtils import *
 
 def trainToySEA():
     cfg = getConfig()
-    convertMatToHDF5(cfg.toyTrainData, cfg.hdf5ToyDir, 1)  #set readMode to 0, in case file already exists for faster execution
-    convertMatToHDF5(cfg.toyTestData, cfg.hdf5ToyDir, 1)
+    convertMatToHDF5(cfg.toyTrainData, cfg.hdf5ToyDir, 0)  #set readMode to 0, in case file already exists for faster execution
+    convertMatToHDF5(cfg.toyTestData, cfg.hdf5ToyDir, 0)
     solver = initCaffe(cfg.toySolver)
     loss,acc,weights = run_solvers(100000, solver)
     del solver
