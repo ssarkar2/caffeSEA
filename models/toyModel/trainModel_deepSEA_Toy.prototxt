@@ -11,7 +11,7 @@ layer {
     phase: TRAIN
   }
   hdf5_data_param {
-    source: "/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/caffeSEA/data/hdf5ToyDir/train.hdf5"
+    source: "/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/caffeSEA/data/hdf5ToyDir/train.txt"
     #backend: HDF5
     batch_size: 64
   }
@@ -27,7 +27,7 @@ layer {
     phase: TEST
   }
   hdf5_data_param {
-    source: "/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/caffeSEA/data/hdf5ToyDir/test.hdf5"
+    source: "/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/caffeSEA/data/hdf5ToyDir/test.txt"
     #backend: HDF5
     batch_size: 64
   }
@@ -277,6 +277,23 @@ layer {
   }
 }
 
-#do the last sigmoidal step
+
+#model:add(nn.Sigmoid():cuda()) 
+layer {
+  name: "sigmoid"
+  bottom: "fc5"
+  top: "sigmoid"
+  type: "Sigmoid"
+}
+
+
 #use SigmoidCrossEntropyLossLayer for this line: criterion = nn.BCECriterion()
+layer {
+  name: "loss"
+  type: "SIGMOID_CROSS_ENTROPY_LOSS"
+  bottom: "sigmoid"
+  bottom: "label"
+  top: "loss"
+}
+
 #how to do: --L1 penalty to last layer (as mentioned in 3_loss.lua)

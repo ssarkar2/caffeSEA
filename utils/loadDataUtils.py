@@ -5,8 +5,8 @@ import h5py
 
 def convertMatToHDF5(matData, hdf5DataDir, readMode):
     createDir(hdf5DataDir)
-    fileName = getFileName(matData) + '.hdf5'
-    fullFileName = ('/').join([hdf5DataDir, fileName])
+    fileName = getFileName(matData) 
+    fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])
     if readMode == 0:
         if os.path.isfile(fullFileName): return
     
@@ -19,6 +19,9 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode):
         dataH5[...] = matdata[matDataName]  #(10000, 4, 1000)
         labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1') 
         labelH5[...] = matdata[matLabelName]  #(10000, 919)
+
+    with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
+        ftxt.write(fullFileName)
 
     
     
