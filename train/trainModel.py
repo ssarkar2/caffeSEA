@@ -16,4 +16,5 @@ def trainToySEA():
         
 def trainFullSEA():
     #download data from a file in the internet, or skip if the files already exist.
+    getFullTrainData('/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/fullData/')
     pass

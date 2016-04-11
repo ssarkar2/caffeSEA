@@ -1,3 +1,5 @@
+#this file contains functions that read in different file formats when using the network (eg FASTA etc)
+
 from subprocess import *
 
 def fasta2hdf5(input_file, output_directory):

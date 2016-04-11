@@ -3,7 +3,8 @@ from train.trainModel import *
 
 
 
-trainToySEA()
+#trainToySEA()
+trainFullSEA()
 
 
 

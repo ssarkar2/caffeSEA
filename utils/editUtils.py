@@ -1,3 +1,7 @@
+#this file contains functions to edit the standard prototexts
+
+from models import caffe_pb2
+
 # new_data = {'max_iter': 5000, 'snapshot': 500}
 def createSolverPrototxt(new_data, save_loc):
     f = open('solverToy.prototxt')
