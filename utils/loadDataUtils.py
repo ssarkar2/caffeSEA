@@ -60,8 +60,12 @@ def getFullTrainData(dataDir):
         if not os.path.isfile(dataDir + 'deepsea_train_bundle.v0.9.tar.gz'):
             downloadFile(file_name, url)
         tar = tarfile.open(file_name, "r:gz")
-        extractFile(tar, 'train', dataDir); extractFile(tar, 'valid', dataDir); extractFile(tar, 'test', dataDir)
+        print 'extraction started...'
+        extractFile(tar, 'train', dataDir); print 'train extract done'
+        extractFile(tar, 'valid', dataDir); print 'valid extract done'
+        extractFile(tar, 'test', dataDir); print 'test extract done'
         tar.close()
+        os.remove(dataDir + 'deepsea_train_bundle.v0.9.tar.gz')
     
 def extractFile(tar, fileName, outFolder):
     member = tar.getmember('deepsea_train/' + fileName + '.mat')
