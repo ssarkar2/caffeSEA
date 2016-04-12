@@ -12,6 +12,9 @@ class Config():
     toySolver = ('/').join([toyModelDir, 'solverToy.prototxt'])
     toyModelDefn = ('/').join([toyModelDir, 'trainModel_deepSEA_Toy.prototxt'])
     
+    #matlab
+    matlabPath = '/opt/common/matlab-r2014a/bin/matlab'
+
     def __setattr__(self, *_):  #so that the values in the class cannot be changed externally
         pass
     

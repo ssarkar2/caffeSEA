@@ -24,5 +24,5 @@ function matReshape(input_matrix)
     save_file = struct(inmats{data_ind}, out_mat, inmats{label_ind}, data_2);
 
     save(input_matrix, '-struct', 'save_file');
-
+    quit
 end

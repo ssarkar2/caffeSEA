@@ -6,7 +6,21 @@ import h5py
 import numpy as np
 import urllib2
 import tarfile
+from train.trainconfig import *
 
+
+def convertMatToHDF5_(matData, hdf5DataDir, readMode):
+    createDir(hdf5DataDir)
+    fileName = getFileName(matData)
+    fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])
+    if readMode == 0:
+        if os.path.isfile(fullFileName): return
+
+    calMatlabDimensionConverter(matData)
+
+def calMatlabDimensionConverter(matData):
+    matPath = Config().matlabPath
+    os.system(matPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); x=path; disp(x(1)); disp(x(1:7)); matReshape(\'' + matData + '\'); quit"')
 
 def convertMatToHDF5(matData, hdf5DataDir, readMode):
     createDir(hdf5DataDir)
