@@ -16,11 +16,34 @@ def convertMatToHDF5_(matData, hdf5DataDir, readMode):
     if readMode == 0:
         if os.path.isfile(fullFileName): return
 
-    calMatlabDimensionConverter(matData)
+    try:
+        matdata = sio.loadmat(matData)
+        [matDataName, matLabelName] = getDataNames(matdata.keys())
+        with h5py.File(fullFileName,'w') as f:
+            swappedData = swapDims(matdata[matDataName])
+            dataH5 = f.create_dataset('data', swappedData.shape, dtype='i1')  #i1 indicates 1byte sized integer.
+            dataH5[...] = swappedData  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
+            labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1') 
+            labelH5[...] = matdata[matLabelName]  #(10000, 919)
+    except:
+        print 'scipy loading of mat file failed. using h5py'
+        #matDataName = callMatlabDimensionConverter(matData)
+        callMatlabDimensionConverter(matData)
+        with h5py.File(matData,'r') as hf:
+            [matDataName, matLabelName] = getDataNames(hf.keys())
+        with h5py.File(fullFileName,'w') as f:
+            dataH5 = f.create_dataset('data', hf[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer.
+            dataH5[...] = hf[matDataName]
+            labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1') 
+            labelH5[...] = matdata[matLabelName]  #(10000, 919)
 
-def calMatlabDimensionConverter(matData):
-    matPath = Config().matlabPath
-    os.system(matPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); x=path; disp(x(1)); disp(x(1:7)); matReshape(\'' + matData + '\'); quit"')
+    with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
+        ftxt.write(fullFileName)
+
+
+def callMatlabDimensionConverter(matData):
+    os.system(Config().matlabPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); matReshape(\'' + matData + '\'); quit"')
+    #return matData.replace('.mat', '_swap.mat')
 
 def convertMatToHDF5(matData, hdf5DataDir, readMode):
     createDir(hdf5DataDir)

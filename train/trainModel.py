@@ -17,8 +17,9 @@ def trainToySEA():
 def trainFullSEA(dataDir):
     #download data from a file in the internet, or skip if the files already exist.
     getFullTrainData(dataDir)
-    #convertMatToHDF5_(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #doesnot work due to huge size of input file. need to fix
+
     convertMatToHDF5_(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
-    #convertMatToHDF5_(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
+    convertMatToHDF5_(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
+    convertMatToHDF5_(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #doesnot work due to huge size of input file. need to fix
     print 'helloagain'
     pass
