@@ -14,7 +14,11 @@ def trainToySEA():
     del solver
     print 'hello'
         
-def trainFullSEA():
+def trainFullSEA(dataDir):
     #download data from a file in the internet, or skip if the files already exist.
-    getFullTrainData('/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/fullData/')
+    getFullTrainData(dataDir)
+    convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #doesnot work due to huge size of input file. need to fix
+    convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
+    convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
+    print 'helloagain'
     pass
