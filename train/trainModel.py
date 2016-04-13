@@ -1,7 +1,7 @@
 from trainconfig import *
 from utils.loadDataUtils import *
 from utils.caffeUtils import *
-
+from utils.editUtils import *
 
 
 
@@ -21,5 +21,10 @@ def trainFullSEA(dataDir):
     convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
     convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
     convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #does not work due to huge size of input file. need to fix  #fixed
+
+    createDir(dataDir + 'Model')
+    #createModelPrototxt   #need to implement this
+    createSolverPrototxt({'snapshot_prefix':"../dumpModels/caffeSEAFull_"}, dataDir + 'Model/')
+
     print 'helloagain'
     pass
