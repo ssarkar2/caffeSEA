@@ -24,6 +24,7 @@ def trainFullSEA(dataDir):
 
     createDir(dataDir + 'Model')
     #createModelPrototxt   #need to implement this
+    createModelPrototxt(dataDir + 'Model/')
     createSolverPrototxt({'snapshot_prefix':"../dumpModels/caffeSEAFull_"}, dataDir + 'Model/')
 
     print 'helloagain'
