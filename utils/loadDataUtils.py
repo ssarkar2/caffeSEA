@@ -31,11 +31,11 @@ def convertMatToHDF5_(matData, hdf5DataDir, readMode):
         callMatlabDimensionConverter(matData)
         with h5py.File(matData,'r') as hf:
             [matDataName, matLabelName] = getDataNames(hf.keys())
-        with h5py.File(fullFileName,'w') as f:
-            dataH5 = f.create_dataset('data', hf[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer.
-            dataH5[...] = hf[matDataName]
-            labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1') 
-            labelH5[...] = matdata[matLabelName]  #(10000, 919)
+            with h5py.File(fullFileName,'w') as f:
+                dataH5 = f.create_dataset('data', hf[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer.
+                dataH5[...] = hf[matDataName]
+                labelH5 = f.create_dataset('label', hf[matLabelName].shape, dtype='i1') 
+                labelH5[...] = hf[matLabelName]  #(10000, 919)
 
     with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
         ftxt.write(fullFileName)
