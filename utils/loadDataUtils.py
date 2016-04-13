@@ -9,7 +9,7 @@ import tarfile
 from train.trainconfig import *
 
 
-def convertMatToHDF5_(matData, hdf5DataDir, readMode):
+def convertMatToHDF5(matData, hdf5DataDir, readMode):
     createDir(hdf5DataDir)
     fileName = getFileName(matData)
     fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])
@@ -45,29 +45,6 @@ def callMatlabDimensionConverter(matData):
     os.system(Config().matlabPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); matReshape(\'' + matData + '\'); quit"')
     #return matData.replace('.mat', '_swap.mat')
 
-def convertMatToHDF5(matData, hdf5DataDir, readMode):
-    createDir(hdf5DataDir)
-    fileName = getFileName(matData) 
-    fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])
-    if readMode == 0:
-        if os.path.isfile(fullFileName): return
-    
-    matdata = sio.loadmat(matData)
-    [matDataName, matLabelName] = getDataNames(matdata.keys())
-    #print getDataNames(matdata.keys())
-    
-    with h5py.File(fullFileName,'w') as f:  
-        swappedData = swapDims(matdata[matDataName])
-        dataH5 = f.create_dataset('data', swappedData.shape, dtype='i1')  #i1 indicates 1byte sized integer.
-        #print len(matdata[matDataName])
-        #print len(matdata[matDataName][0])
-        #print type(matdata[matDataName])
-        dataH5[...] = swappedData  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
-        labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1') 
-        labelH5[...] = matdata[matLabelName]  #(10000, 919)
-
-    with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
-        ftxt.write(fullFileName)
 
 def swapDims(nparr):
     shp = nparr.shape
