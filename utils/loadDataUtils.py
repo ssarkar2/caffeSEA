@@ -14,7 +14,7 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode):
     fileName = getFileName(matData)
     fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])
     if readMode == 0:
-        if os.path.isfile(fullFileName): return
+        if os.path.isfile(fullFileName): return ('/').join([hdf5DataDir, fileName+'.txt' ])
 
     try:
         matdata = sio.loadmat(matData)
@@ -39,6 +39,8 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode):
 
     with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
         ftxt.write(fullFileName)
+
+    return ('/').join([hdf5DataDir, fileName+'.txt' ])
 
 
 def callMatlabDimensionConverter(matData):

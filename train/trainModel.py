@@ -18,14 +18,17 @@ def trainFullSEA(dataDir):
     #download data from a file in the internet, or skip if the files already exist.
     getFullTrainData(dataDir)
 
-    convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
-    convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
-    convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #does not work due to huge size of input file. need to fix  #fixed
+    validTxt = convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
+    testTxt = convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
+    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #does not work due to huge size of input file. need to fix  #fixed
 
     createDir(dataDir + 'Model')
-    #createModelPrototxt   #need to implement this
-    createModelPrototxt(dataDir + 'Model/')
-    createSolverPrototxt({'snapshot_prefix':"../dumpModels/caffeSEAFull_"}, dataDir + 'Model/')
+    outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, testTxt)  #currently it can only alter the train and test input files
+    newSolverProtoLoc = createSolverPrototxt({'snapshot_prefix':"../dumpModels/caffeSEAFull_", "net":outputModelProtoLoc}, dataDir + 'Model/')
+
+    solver = initCaffe([('fullSolver', newSolverProtoLoc)])
+    loss, weights = run_solvers(100000, solver)
+    del solver
 
     print 'helloagain'
     pass
