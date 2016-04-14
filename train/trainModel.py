@@ -20,15 +20,19 @@ def trainFullSEA(dataDir):
 
     validTxt = convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
     testTxt = convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
-    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0)  #does not work due to huge size of input file. need to fix  #fixed
+    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0, 20)  #does not work due to huge size of input file. need to fix  #fixed
 
     createDir(dataDir + 'Model')
     outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, testTxt)  #currently it can only alter the train and test input files
-    newSolverProtoLoc = createSolverPrototxt({'snapshot_prefix':"../dumpModels/caffeSEAFull_", "net":outputModelProtoLoc}, dataDir + 'Model/')
+    newSolverProtoLoc = createSolverPrototxt({'snapshot_prefix':"\"../dumpModels/caffeSEAFull_\"", "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
 
-    solver = initCaffe([('fullSolver', newSolverProtoLoc)])
-    loss, weights = run_solvers(100000, solver)
-    del solver
+    newSolverProtoLoc = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/fullData/Model/solver_new_hand.prototxt'    #HACK: FIX: CHECK WHY AUTO SOLVER PROTO GENERATION FAILS
+
+    #ALSO, the train hdf5 file is too big... create small chunks of train files
+
+    #solver = initCaffe([('fullSolver', newSolverProtoLoc)])
+    #loss, weights = run_solvers(100000, solver)
+    #del solver
 
     print 'helloagain'
     pass

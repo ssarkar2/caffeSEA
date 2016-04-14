@@ -9,7 +9,7 @@ import tarfile
 from train.trainconfig import *
 
 
-def convertMatToHDF5(matData, hdf5DataDir, readMode):
+def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1):
     createDir(hdf5DataDir)
     fileName = getFileName(matData)
     fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])
@@ -32,6 +32,7 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode):
         with h5py.File(matData,'r') as hf:
             [matDataName, matLabelName] = getDataNames(hf.keys())
             with h5py.File(fullFileName,'w') as f:
+                print hf[matDataName].shape   #(4000, 1, 1, 4400000)   #WRONG. CHECK
                 dataH5 = f.create_dataset('data', hf[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer.
                 dataH5[...] = hf[matDataName]
                 labelH5 = f.create_dataset('label', hf[matLabelName].shape, dtype='i1') 
