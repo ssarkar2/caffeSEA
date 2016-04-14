@@ -19,14 +19,14 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1000):  #split into f
 
     print matData
     try:
-        matdata = sio.loadmat(matData)
-        [matDataName, matLabelName] = getDataNames(matdata.keys())
-        with h5py.File(fullFileName,'w') as f:
-            swappedData = swapDims(matdata[matDataName])
-            dataH5 = f.create_dataset('data', swappedData.shape, dtype='i1')  #i1 indicates 1byte sized integer.
-            dataH5[...] = swappedData  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
-            labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1')
-            labelH5[...] = matdata[matLabelName]  #(10000, 919)
+        #matdata = sio.loadmat(matData)
+        #[matDataName, matLabelName] = getDataNames(matdata.keys())
+        #with h5py.File(fullFileName,'w') as f:
+        #    swappedData = swapDims(matdata[matDataName])
+        #    dataH5 = f.create_dataset('data', swappedData.shape, dtype='i1')  #i1 indicates 1byte sized integer.
+        #    dataH5[...] = swappedData  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
+        #    labelH5 = f.create_dataset('label', matdata[matLabelName].shape, dtype='i1')
+        #    labelH5[...] = matdata[matLabelName]  #(10000, 919)
 
 
         matdata = sio.loadmat(matData)
@@ -34,13 +34,23 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1000):  #split into f
         swappedData = swapDims(matdata[matDataName])
         datasize = swappedData.shape
         chunkCount = 0;
-        for chunkNum in range(0,datasize[0]/split):
+        #for chunkNum in range(0,datasize[0]/split):
+        while(1):
             chunkCount += 1
             with h5py.File(('/').join([hdf5DataDir, fileName + str(chunkCount) + '.hdf5']),'w') as f:
-                dataH5 = f.create_dataset('data', (split, datasize[1], datasize[2], datasize[3]), dtype='i1')  #i1 indicates 1byte sized integer.
-                dataH5[...] = swappedData[(chunkCount-1)*split : chunkCount*split][:][:][:]  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
-                labelH5 = f.create_dataset('label', (split, 919), dtype='i1')
-                labelH5[...] = matdata[matLabelName][(chunkCount-1)*split : chunkCount*split][:]  #(10000, 919)
+                if chunkCount*split < datasize[0]:
+                    numInThisChunk = split
+                    endidx = chunkCount*split
+                else:
+                    numInThisChunk = datasize[0] - (chunkCount-1)*split
+                    endidx = None  #till the end
+
+
+                    dataH5 = f.create_dataset('data', (numInThisChunk, datasize[1], datasize[2], datasize[3]), dtype='i1')  #i1 indicates 1byte sized integer.
+                    dataH5[...] = swappedData[(chunkCount-1)*split : endidx][:][:][:]  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
+                    labelH5 = f.create_dataset('label', (numInThisChunk, 919), dtype='i1')
+                    labelH5[...] = matdata[matLabelName][(chunkCount-1)*split : endidx][:]  #(10000, 919)
+                    if endidx == None: break
 
 
 
@@ -48,15 +58,24 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1000):  #split into f
     except:
         print 'scipy loading of mat file failed. using h5py'
         #matDataName = callMatlabDimensionConverter(matData)
+        #callMatlabDimensionConverter(matData)
+        #with h5py.File(matData,'r') as hf:
+        #    [matDataName, matLabelName] = getDataNames(hf.keys())
+        #    with h5py.File(fullFileName,'w') as f:
+        #        print hf[matDataName].shape   #(4000, 1, 1, 4400000)   #WRONG. CHECK
+        #        dataH5 = f.create_dataset('data', hf[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer.
+        #        dataH5[...] = hf[matDataName]
+        #        labelH5 = f.create_dataset('label', hf[matLabelName].shape, dtype='i1')
+        #        labelH5[...] = hf[matLabelName]  #(10000, 919)
+
+        print 'call matlab'
         callMatlabDimensionConverter(matData)
+        print 'matlab done'
+        print matData
         with h5py.File(matData,'r') as hf:
             [matDataName, matLabelName] = getDataNames(hf.keys())
-            with h5py.File(fullFileName,'w') as f:
-                print hf[matDataName].shape   #(4000, 1, 1, 4400000)   #WRONG. CHECK
-                dataH5 = f.create_dataset('data', hf[matDataName].shape, dtype='i1')  #i1 indicates 1byte sized integer.
-                dataH5[...] = hf[matDataName]
-                labelH5 = f.create_dataset('label', hf[matLabelName].shape, dtype='i1')
-                labelH5[...] = hf[matLabelName]  #(10000, 919)
+            print  matDataName, hf[matDataName].shape
+            print  matLabelName, hf[matLabelName].shape
 
     with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
         for i in range(chunkCount):
@@ -81,8 +100,8 @@ def createDir(dirname): #check if such a directory exists, else create a new one
 
 
 def getFileName(fullName):
-    #return fullName.split('/')[-1].split('.')[0]   #for ubuntu
-    return fullName.split('\\')[-1].split('.')[0]   #for windows
+    return fullName.split('/')[-1].split('.')[0]   #for ubuntu
+    #return fullName.split('\\')[-1].split('.')[0]   #for windows
 
 def getDataNames(names):
     varnames = [i for i in names if '__' not in i]  #remove things like __global__, __version__ etc. now varnames is of size 2 only
