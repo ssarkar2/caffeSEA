@@ -21,7 +21,7 @@ def trainFullSEA(dataDir):
 
     validTxt = convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)
     testTxt = convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)
-    #trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)  #does not work due to huge size of input file. need to fix  #fixed
+    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)  #does not work due to huge size of input file. need to fix  #fixed
 
     createDir(dataDir + 'Model')
     outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, testTxt)  #currently it can only alter the train and test input files
