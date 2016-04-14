@@ -25,7 +25,10 @@ function matReshape(input_matrix, chunksz)
     whos
 
     [a,b,c] = size(data_1)
-    out_mat = reshape(data_1, [a,1,b,c]);
+    %out_mat = reshape(data_1, [a,1,b,c]);
+    data_1 = permute(data_1,[2 3 1]);
+    data_1 = reshape(data_1,[b c 1 a]);
+    
     whos
 
 
