@@ -13,14 +13,15 @@ def trainToySEA():
     loss, weights = run_solvers(100000, solver)
     del solver
     print 'hello'
-        
+
 def trainFullSEA(dataDir):
     #download data from a file in the internet, or skip if the files already exist.
     getFullTrainData(dataDir)
+    chunkSize = 1000
 
-    validTxt = convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0)
-    testTxt = convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0)
-    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0, 20)  #does not work due to huge size of input file. need to fix  #fixed
+    validTxt = convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)
+    #testTxt = convertMatToHDF5(dataDir + 'test.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)
+    #trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir', 0, chunkSize)  #does not work due to huge size of input file. need to fix  #fixed
 
     createDir(dataDir + 'Model')
     outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, testTxt)  #currently it can only alter the train and test input files

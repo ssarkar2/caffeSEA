@@ -1,10 +1,11 @@
 #this file contains functions that init/call/use caffe
-import caffe, numpy as np
+#import caffe
+import numpy as np
 
-def initCaffe(solverList): #solverList is a list of 2-tuples (name, solverpath). 
+def initCaffe(solverList): #solverList is a list of 2-tuples (name, solverpath).
     caffe.set_mode_gpu()
     return [(solverName, caffe.get_solver(solverPath)) for (solverName, solverPath) in solverList]
-    
+
 def run_solvers(niter,solvers, disp_interval=10):
     blobs = ('loss',)# 'acc')
     (loss,) = ({name: np.zeros(niter) for name, _ in solvers} for _ in blobs)
@@ -16,7 +17,7 @@ def run_solvers(niter,solvers, disp_interval=10):
             loss_disp = '; '.join('%s: loss=%.3f' %
                                   (n, loss[n][it])
                                   for n, _ in solvers)
-            print '%3d) %s' % (it, loss_disp)     
+            print '%3d) %s' % (it, loss_disp)
     # Save the learned weights from both nets.
     weight_dir = tempfile.mkdtemp()
     weights = {}
