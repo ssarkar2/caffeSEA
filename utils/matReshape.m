@@ -58,7 +58,7 @@ end
 
 function nm = getFileName(input_matrix, batchno)
   t = strsplit(input_matrix, '.');
-  nm = [t{0} num2str(batchno) '.hdf5']
+  nm = [t{1} num2str(batchno) '.hdf5']
 end
 
 

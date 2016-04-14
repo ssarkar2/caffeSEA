@@ -9,7 +9,7 @@ import tarfile
 from train.trainconfig import *
 
 
-def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1000):  #split into files each containing 'split' number of samples
+def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into files each containing 'split' number of samples
     createDir(hdf5DataDir)
     fileName = getFileName(matData)
     fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])   #check..remove later if not needed
@@ -69,13 +69,13 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1000):  #split into f
         #        labelH5[...] = hf[matLabelName]  #(10000, 919)
 
         print 'call matlab'
-        callMatlabDimensionConverter(matData)
-        print 'matlab done'
-        print matData
-        with h5py.File(matData,'r') as hf:
-            [matDataName, matLabelName] = getDataNames(hf.keys())
-            print  matDataName, hf[matDataName].shape
-            print  matLabelName, hf[matLabelName].shape
+        callMatlabDimensionConverter(matData, split)
+        #print 'matlab done'
+        #print matData
+        #with h5py.File(matData,'r') as hf:
+        #    [matDataName, matLabelName] = getDataNames(hf.keys())
+        #    print  matDataName, hf[matDataName].shape
+        #    print  matLabelName, hf[matLabelName].shape
 
     with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
         for i in range(chunkCount):
@@ -84,8 +84,8 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=1000):  #split into f
     return ('/').join([hdf5DataDir, fileName+'.txt' ])
 
 
-def callMatlabDimensionConverter(matData):
-    os.system(Config().matlabPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); matReshape(\'' + matData + '\'); quit"')
+def callMatlabDimensionConverter(matData, chunksz):
+    os.system(Config().matlabPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); matReshape(\'' + matData +',' + str(chunksz)+ '\'); quit"')
     #return matData.replace('.mat', '_swap.mat')
 
 
