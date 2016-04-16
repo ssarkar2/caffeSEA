@@ -8,13 +8,16 @@ import urllib2
 import tarfile
 from train.trainconfig import *
 
+def addSlash(dirname): #if a directory location does nto end with '/' add it at the end
+    return dirname + ('/', '')[dirname[-1] == '/']
 
 def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into files each containing 'split' number of samples
+    hdf5DataDir = addSlash(hdf5DataDir)
     createDir(hdf5DataDir)
     fileName = getFileName(matData)
-    fullFileName = ('/').join([hdf5DataDir, fileName + '.hdf5'])   #check..remove later if not needed
+    #fullFileName = hdf5DataDir + fileName + '.hdf5'
     if readMode == 0:
-        txtFile = ('/').join([hdf5DataDir, fileName + '.txt'])
+        txtFile = hdf5DataDir + fileName + '.txt'
         if os.path.isfile(txtFile): return txtFile
 
     print matData
@@ -69,23 +72,24 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into 
         #        labelH5[...] = hf[matLabelName]  #(10000, 919)
 
         print 'call matlab'
-        callMatlabDimensionConverter(matData, split)
-        #print 'matlab done'
+        callMatlabDimensionConverter(matData, hdf5DataDir, split)
+        chunkCount = sio.loadmat(hdf5DataDir + 'chunkCount.mat')['chunkCount']
+        print 'matlab done. files created: ', chunkCount
         #print matData
         #with h5py.File(matData,'r') as hf:
         #    [matDataName, matLabelName] = getDataNames(hf.keys())
         #    print  matDataName, hf[matDataName].shape
         #    print  matLabelName, hf[matLabelName].shape
 
-    with open(('/').join([hdf5DataDir, fileName+'.txt' ]), 'w') as ftxt:
+    with open(hdf5DataDir + fileName+'.txt', 'w') as ftxt:
         for i in range(chunkCount):
-            ftxt.write(('/').join([hdf5DataDir, fileName + str(i+1) + '.hdf5\n']))
+            ftxt.write(hdf5DataDir + fileName + str(i+1) + '.hdf5\n')
 
     return ('/').join([hdf5DataDir, fileName+'.txt' ])
 
 
-def callMatlabDimensionConverter(matData, chunksz):
-    os.system(Config().matlabPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); matReshape(\'' + matData +',' + str(chunksz)+ '\'); quit"')
+def callMatlabDimensionConverter(matData, hdf5DataDir, chunksz):
+    os.system(Config().matlabPath + ' -nodisplay -nosplash -nodesktop -r "addpath(\'./utils\'); matReshape(\'' + matData +',' + hdf5DataDir + ',' + str(chunksz)+ '\'); quit"')
     #return matData.replace('.mat', '_swap.mat')
 
 
