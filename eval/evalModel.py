@@ -58,6 +58,10 @@ def evaluateModel(caffeProtoLoc, caffeModelLoc, testHDF5Loc, runlogFile):
     caffe.set_mode_gpu()
     net = caffe.Net(caffeProtoLoc, caffe.TEST)
     out = net.forward()
-    print out['loss']
+    print out['label']
+    print
+    print out['softmax']  #this does only 1 batch
+
+
 
 

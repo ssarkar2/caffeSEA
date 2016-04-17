@@ -296,6 +296,9 @@ layer {
   bottom: "softmax"
   bottom: "label"
   top: "loss"
+  include {
+    phase: TRAIN
+  }
 }
 
 
