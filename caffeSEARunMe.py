@@ -1,4 +1,5 @@
 from train.trainModel import *
+from eval.evalModel import *
 import sys
 
 
