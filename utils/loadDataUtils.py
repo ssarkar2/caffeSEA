@@ -37,10 +37,9 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into 
         swappedData = swapDims(matdata[matDataName])
         datasize = swappedData.shape
         chunkCount = 0;
-        #for chunkNum in range(0,datasize[0]/split):
         while(1):
             chunkCount += 1
-            with h5py.File(('/').join([hdf5DataDir, fileName + str(chunkCount) + '.hdf5']),'w') as f:
+            with h5py.File(hdf5DataDir + fileName + str(chunkCount) + '.hdf5') as f:
                 if chunkCount*split < datasize[0]:
                     numInThisChunk = split
                     endidx = chunkCount*split
@@ -49,14 +48,11 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into 
                     endidx = None  #till the end
 
 
-                    dataH5 = f.create_dataset('data', (numInThisChunk, datasize[1], datasize[2], datasize[3]), dtype='i1')  #i1 indicates 1byte sized integer.
-                    dataH5[...] = swappedData[(chunkCount-1)*split : endidx][:][:][:]  #matdata[matDataName] is (10000, 4, 1000). swappedData is (10000,1,4,1000)
-                    labelH5 = f.create_dataset('label', (numInThisChunk, 919), dtype='i1')
-                    labelH5[...] = matdata[matLabelName][(chunkCount-1)*split : endidx][:]  #(10000, 919)
-                    if endidx == None: break
-
-
-
+                dataH5 = f.create_dataset('data', (numInThisChunk, datasize[1], datasize[2], datasize[3]), dtype='i1')  #i1 indicates 1byte sized integer.
+                dataH5[...] = swappedData[(chunkCount-1)*split : endidx][:][:][:]
+                labelH5 = f.create_dataset('label', (numInThisChunk, 919), dtype='i1')
+                labelH5[...] = matdata[matLabelName][(chunkCount-1)*split : endidx][:]
+                if endidx == None: break
 
     except:
         print 'scipy loading of mat file failed. using h5py'
