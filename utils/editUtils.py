@@ -15,12 +15,12 @@ def createSolverPrototxt(newData, saveLoc):
         newDictionary[key] = str(value)
     f.close()
     newSolverText = ['{}: {}'.format(key, value) for key, value in newDictionary.iteritems()]
-    newSolverProtoLoc = '\n'.join(newSolverText)
+    newSolverProto = '\n'.join(newSolverText)
     newFileName = saveLoc + 'solver_new.prototxt'
     fNew = open(newFileName, 'w')
-    fNew.write(newSolverProtoLoc)
+    fNew.write(newSolverProto)
     fNew.close()
-    return newSolverProtoLoc
+    return newFileName
 
 
 def createModelPrototxt(outDir, trainTxt, testTxt):
