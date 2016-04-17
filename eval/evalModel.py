@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
+import caffe
 
 '''
 test_np_array = np.random.random((5000, 919))
@@ -52,7 +53,11 @@ def generateLossCurve(fileName):
     plt.show()
 
 
-def evaluateModel(caffeModelLoc, testHDF5Loc, runlogFile):
-    generateLossCurve(runlogFile)
+def evaluateModel(caffeProtoLoc, caffeModelLoc, testHDF5Loc, runlogFile):
+    #generateLossCurve(runlogFile)
+    caffe.set_mode_gpu()
+    net = caffe.Net(caffeProtoLoc, caffe.TEST)
+    out = net.forward()
+    print out['loss']
 
 
