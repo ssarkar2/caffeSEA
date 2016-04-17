@@ -14,7 +14,7 @@ def trainToySEA():
     del solver
     print 'hello'
 
-def trainFullSEA(dataDir):
+def trainFullSEA(dataDir, snapshotLoc):
     #download data from a file in the internet, or skip if the files already exist.
     getFullTrainData(dataDir)
     chunkSize = 10000
@@ -25,11 +25,10 @@ def trainFullSEA(dataDir):
 
     createDir(dataDir + 'Model')
     outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, testTxt)  #currently it can only alter the train and test input files
-    newSolverProtoLoc = createSolverPrototxt({'snapshot_prefix':"\"../dumpModels/caffeSEAFull_\"", "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
+    newSolverProtoLoc = createSolverPrototxt({'display':'5', 'snapshot': '10', 'max_iter':'100', 'snapshot_prefix':snapshotLoc, "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
 
     solver = initCaffe([('fullSolver', newSolverProtoLoc)])
     loss, weights = run_solvers(100000, solver)
     del solver
 
     print 'helloagain'
-    pass

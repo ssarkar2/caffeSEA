@@ -41,7 +41,7 @@ def generateROCplot(generatedLabels, actualLabels):
 def generateLossCurve(fileName):
     f = open(fileName)
     defText = f.read().split('\n')
-    defText = defText[1:]
+    defText = defText[1:-1]
     x = []
     y = []    
     for line in defText:
@@ -50,3 +50,9 @@ def generateLossCurve(fileName):
     f.close()
     plt.plot(x, y, 'k')
     plt.show()
+
+
+def evaluateModel(caffeModelLoc, testHDF5Loc, runlogFile):
+    generateLossCurve(runlogFile)
+
+
