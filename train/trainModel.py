@@ -31,9 +31,9 @@ def trainFullSEA(dataDir):
 
     #ALSO, the train hdf5 file is too big... create small chunks of train files
 
-    #solver = initCaffe([('fullSolver', newSolverProtoLoc)])
-    #loss, weights = run_solvers(100000, solver)
-    #del solver
+    solver = initCaffe([('fullSolver', newSolverProtoLoc)])
+    loss, weights = run_solvers(100000, solver)
+    del solver
 
     print 'helloagain'
     pass
