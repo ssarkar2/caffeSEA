@@ -1,5 +1,5 @@
 #this file contains functions that init/call/use caffe
-#import caffe
+import caffe
 import numpy as np
 
 def initCaffe(solverList): #solverList is a list of 2-tuples (name, solverpath).
