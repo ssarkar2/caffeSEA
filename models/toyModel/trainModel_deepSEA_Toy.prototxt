@@ -79,9 +79,10 @@ layer {
   top: "pool1"
   pooling_param {
     pool: MAX
+    stride_h: 1
+    stride_w: 4
     kernel_h: 1
     kernel_w: 4
-    stride: 4
   }
 }
 
@@ -142,9 +143,10 @@ layer {
   top: "pool2"
   pooling_param {
     pool: MAX
+    stride_h: 1
+    stride_w: 4
     kernel_h: 1
     kernel_w: 4
-    stride: 4
   }
 }
 
@@ -280,10 +282,10 @@ layer {
 
 #model:add(nn.Sigmoid():cuda()) 
 layer {
-  name: "sigmoid"
+  name: "softmax"
   bottom: "fc5"
-  top: "sigmoid"
-  type: "Sigmoid"
+  top: "softmax"
+  type: "Softmax"
 }
 
 
@@ -291,15 +293,25 @@ layer {
 layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "sigmoid"
+  bottom: "softmax"
   bottom: "label"
   top: "loss"
 }
 
+
+#layer {
+#  name: "loss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "softmax"
+#  bottom: "label"
+#  top: "loss"
+#}
+
+
 #layer {
 #  name: "acc"
 #  type: "Accuracy"
-#  bottom: "sigmoid"
+#  bottom: "softmax"
 #  bottom: "label"
 #  top: "acc"
 #  include {
