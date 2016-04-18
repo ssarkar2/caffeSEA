@@ -74,8 +74,9 @@ def evaluateModel(caffeProtoLoc, caffeModelLoc, testMatLoc, testHDF5Loc, runlogF
         else:
             result = np.vstack((result, r)); ground = np.vstack((ground, g))
 
-    print result.shape, ground.shape
-    generateROCplot(result, ground)
+    auclist = generateROCplot(result, ground)
+    print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
+    print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
 
 
 

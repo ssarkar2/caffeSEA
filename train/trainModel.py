@@ -23,7 +23,7 @@ def trainFullSEA(dataDir, snapshotLoc):
     trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir/', 0, chunkSize)
 
     createDir(dataDir + 'Model')
-    outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt)  #currently it can only alter the train and test input files
+    outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, validTxt)  #currently it can only alter the train and test input files
     newSolverProtoLoc = createSolverPrototxt({'display':'50', 'snapshot': '10000', 'max_iter':'80000', 'snapshot_prefix':snapshotLoc, "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
 
     solver = initCaffe([('fullSolver', newSolverProtoLoc)])
