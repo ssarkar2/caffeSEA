@@ -2,6 +2,8 @@ import numpy as np
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import caffe
+from utils.loadDataUtils import *
+from utils.caffeUtils import *
 
 '''
 test_np_array = np.random.random((5000, 919))
@@ -53,14 +55,27 @@ def generateLossCurve(fileName):
     plt.show()
 
 
-def evaluateModel(caffeProtoLoc, caffeModelLoc, testHDF5Loc, runlogFile):
-    #generateLossCurve(runlogFile)
-    caffe.set_mode_gpu()
-    net = caffe.Net(caffeProtoLoc, caffe.TEST)
-    out = net.forward()
-    print out['label']
-    print
-    print out['softmax']  #this does only 1 batch
+def evaluateModel(caffeProtoLoc, caffeModelLoc, testMatLoc, testHDF5Loc, runlogFile):
+    generateLossCurve(runlogFile)
+
+    testTxt = convertMatToHDF5(testMatLoc, testHDF5Loc, 0, 10000)
+    f = open(testTxt, 'r')
+    filenames = f.read().split('\n')
+    caffe.set_mode_gpu() ; net = caffe.Net(caffeProtoLoc, caffe.TEST)
+    result = []; ground = [];
+    flag = 1; c = 0;
+    for filename in filenames:
+        c+=1
+        if c == 4: break  #hack
+        print 'processing', c, 'out of ', len(filenames), 'test hdf5 files'
+        [r,g] = forwardThroughNetwork(filename, net, 'data', 'label', 'softmax', 64)
+        if flag == 1:
+            result = r; ground = g; flag = 0
+        else:
+            result = np.vstack((result, r)); ground = np.vstack((ground, g))
+
+    print result.shape, ground.shape
+    generateROCplot(result, ground)
 
 
 

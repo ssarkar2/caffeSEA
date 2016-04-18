@@ -1,6 +1,7 @@
 #this file contains functions that init/call/use caffe
 import caffe
 import numpy as np
+import h5py
 
 def initCaffe(solverList): #solverList is a list of 2-tuples (name, solverpath).
     caffe.set_mode_gpu()
@@ -26,3 +27,30 @@ def run_solvers(niter,solvers, disp_interval=10):
         weights[name] = os.path.join(weight_dir, filename)
         s.net.save(weights[name])
     return loss , weights
+
+
+def forwardThroughNetwork(filename, net, dataLayerName, groundTruthName, outLayerName, batchsize):
+    f = h5py.File(filename, 'r')
+    numsamples = f[dataLayerName].shape[0]
+    c = 0;
+    flag = 1;
+    while(1):
+        c += 1;
+        if c*batchsize <= numsamples:
+            endidx = c*batchsize; currbatch = batchsize
+        else:
+            endidx = None; currbatch = numsamples-(c-1)*batchsize  #till the end
+        if c%50 == 0:
+            print 'processing batch', c, ' out of ', numsamples/batchsize
+        net.blobs[dataLayerName].data[0:currbatch,:,:,:] = f[dataLayerName][batchsize*(c-1):endidx][:][:][:]
+        out= net.forward()
+        #print out.keys()
+        #print out[groundTruthName].shape, out[outLayerName].shape
+        if flag == 1:
+            result = out[outLayerName]; ground = out[groundTruthName]; flag = 0
+        else:
+            result = np.vstack((result, out[outLayerName][0:currbatch][:])); ground = np.vstack((ground, out[groundTruthName][0:currbatch][:]));
+        if endidx == None: break
+    return [result, ground]
+
+
