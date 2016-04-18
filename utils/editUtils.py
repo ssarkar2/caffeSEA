@@ -23,12 +23,14 @@ def createSolverPrototxt(newData, saveLoc):
     return newFileName
 
 
-def createModelPrototxt(outDir, trainTxt, testTxt):
+def createModelPrototxt(outDir, trainTxt, testTxt = ''):
      net = caffe_pb2.NetParameter()
      modelDefn = Merge((open(Config().toyModelDefn,'r').read()), net)
 
-     modelDefn.layer[0].hdf5_data_param.source = trainTxt
-     modelDefn.layer[1].hdf5_data_param.source = testTxt
+     if trainTxt != '':
+         modelDefn.layer[0].hdf5_data_param.source = trainTxt
+     if testTxt != '':
+         modelDefn.layer[1].hdf5_data_param.source = testTxt
      outputModelProtoLoc = outDir + 'model_defn_new.prototxt'
      open(outputModelProtoLoc, 'w').write(str(modelDefn))
      return outputModelProtoLoc

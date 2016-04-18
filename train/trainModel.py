@@ -20,12 +20,11 @@ def trainFullSEA(dataDir, snapshotLoc):
     chunkSize = 10000
 
     validTxt = convertMatToHDF5(dataDir + 'valid.mat', dataDir + 'hdf5FullInputDir/', 0, chunkSize)
-    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir/', 0, chunkSize)  #does not work due to huge size of input file. need to fix  #fixed
+    trainTxt = convertMatToHDF5(dataDir + 'train.mat', dataDir + 'hdf5FullInputDir/', 0, chunkSize)
 
     createDir(dataDir + 'Model')
-    outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, testTxt)  #currently it can only alter the train and test input files
-    #'test_iter': '10', 'test_interval': '100',
-    newSolverProtoLoc = createSolverPrototxt({ 'display':'10', 'snapshot': '100', 'max_iter':'500', 'snapshot_prefix':snapshotLoc, "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
+    outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt)  #currently it can only alter the train and test input files
+    newSolverProtoLoc = createSolverPrototxt({'display':'50', 'snapshot': '10000', 'max_iter':'80000', 'snapshot_prefix':snapshotLoc, "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
 
     solver = initCaffe([('fullSolver', newSolverProtoLoc)])
     loss, weights = run_solvers(100000, solver)
