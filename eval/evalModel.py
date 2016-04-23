@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import caffe
 from utils.loadDataUtils import *
 from utils.caffeUtils import *
+import h5py
 
 '''
 test_np_array = np.random.random((5000, 919))
@@ -77,6 +78,20 @@ def evaluateModel(caffeProtoLoc, caffeModelLoc, testMatLoc, testHDF5Loc, runlogF
     auclist = generateROCplot(result, ground)
     print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
     print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
+
+
+def evaluateModelTorch(hdf5FileName):
+    f = h5py.File(hdf5FileName, 'r')
+    result = f['pred']
+    ground = f['gt']
+
+
+    auclist = generateROCplot(result, ground)
+    print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
+    print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
+
+    #0.904303375377 nan 0.839268867091
+    #[0.90430337537739158, 0.930632247688994, 0.8392688670912748]
 
 
 
