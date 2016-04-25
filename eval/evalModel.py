@@ -85,13 +85,16 @@ def evaluateModelTorch(hdf5FileName):
     result = f['pred']
     ground = f['gt']
 
-
     auclist = generateROCplot(result, ground)
     print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
     print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
 
     #0.904303375377 nan 0.839268867091
     #[0.90430337537739158, 0.930632247688994, 0.8392688670912748]
+
+    #with prelu instead of relu
+    #0.90129743803 nan 0.836661475715
+    #[0.90129743802985118, 0.93133001457163556, 0.83666147571507732]
 
 
 
