@@ -82,6 +82,10 @@ def evaluateModel(caffeProtoLoc, caffeModelLoc, testMatLoc, testHDF5Loc, runlogF
     print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
     print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
 
+    #0.494528611771 nan nan
+    #[0.49452861177063634, 0.49866068230363758, 0.49691316016488069]
+
+
 
 def evaluateModelTorch(hdf5FileName):
     f = h5py.File(hdf5FileName, 'r')
