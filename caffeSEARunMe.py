@@ -9,10 +9,10 @@ if __name__ == '__main__':
     if op == 0:
         trainToySEA()
     elif op == 1:
-        trainFullSEA(dataDir, "\"../dumpModels/caffeSEAFull_\"")
+        trainFullSEA(dataDir, "\"../dumpModels_1/caffeSEAFull_\"")
         #trainFullSEA('C:\Sayantan\\acads\cmsc702\deepSEACaffe\\fullData\\')
     elif op == 2:
-        evaluateModel(dataDir + 'Model/model_defn_new.prototxt' ,'/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/dumpModels/caffeSEAFull__iter_30000.caffemodel', dataDir + 'test.mat', dataDir + 'hdf5FullInputDir/', 'runlog.txt')
+        evaluateModel(dataDir + 'Model/model_defn_new.prototxt' ,'/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/dumpModels_1/caffeSEAFull__iter_30000.caffemodel', dataDir + 'test.mat', dataDir + 'hdf5FullInputDir/', 'runlog.txt')
     elif op == 3:
         #hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat.pred.h5'
         hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat_prelu.pred.h5'

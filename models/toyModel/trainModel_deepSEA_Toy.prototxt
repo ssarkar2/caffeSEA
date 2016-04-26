@@ -280,13 +280,6 @@ layer {
 }
 
 
-#model:add(nn.Sigmoid():cuda()) 
-layer {
-  name: "softmax"
-  bottom: "fc5"
-  top: "softmax"
-  type: "Softmax"
-}
 
 
 #use SigmoidCrossEntropyLossLayer for this line: criterion = nn.BCECriterion()
