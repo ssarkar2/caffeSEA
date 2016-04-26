@@ -24,7 +24,7 @@ def trainFullSEA(dataDir, snapshotLoc):
 
     createDir(dataDir + 'Model')
     outputModelProtoLoc = createModelPrototxt(dataDir + 'Model/', trainTxt, validTxt)  #currently it can only alter the train and test input files
-    newSolverProtoLoc = createSolverPrototxt({'display':'50', 'snapshot': '10000', 'max_iter':'80000', 'snapshot_prefix':snapshotLoc, "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
+    newSolverProtoLoc = createSolverPrototxt({'display':'25', 'snapshot': '1000', 'max_iter':'50000', 'snapshot_prefix':snapshotLoc, "net":'"' + outputModelProtoLoc + '"'}, dataDir + 'Model/')
 
     solver = initCaffe([('fullSolver', newSolverProtoLoc)])
     loss, weights = run_solvers(100000, solver)

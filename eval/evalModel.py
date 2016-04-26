@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import caffe
 from utils.loadDataUtils import *
 from utils.caffeUtils import *
-import h5py
+import h5py, math
 
 '''
 test_np_array = np.random.random((5000, 919))
@@ -69,9 +69,10 @@ def evaluateModel(caffeProtoLoc, caffeModelLoc, testMatLoc, testHDF5Loc, runlogF
         c+=1
         if c == 4: break  #hack
         print 'processing', c, 'out of ', len(filenames), 'test hdf5 files'
-        [r,g] = forwardThroughNetwork(filename, net, 'data', 'label', 'softmax', 64)
+        [r,g] = forwardThroughNetwork(filename, net, 'data', 'label', 'fc5', 64)
         #do softmax here....
-        t = [math.exp(i) for i in r]; sm = sum(t); r = [t/sm for i in t]
+        t = [[math.exp(j) for j in i] for i in r]
+        r = [np.asarray(t[i])/float(sum(t[i])) for i in range(len(t))]
         if flag == 1:
             result = r; ground = g; flag = 0
         else:
