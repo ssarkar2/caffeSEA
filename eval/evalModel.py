@@ -70,7 +70,8 @@ def evaluateModel(caffeProtoLoc, caffeModelLoc, testMatLoc, testHDF5Loc, runlogF
         if c == 4: break  #hack
         print 'processing', c, 'out of ', len(filenames), 'test hdf5 files'
         [r,g] = forwardThroughNetwork(filename, net, 'data', 'label', 'softmax', 64)
-        #do softmax here.... 
+        #do softmax here....
+        t = [math.exp(i) for i in r]; sm = sum(t); r = [t/sm for i in t]
         if flag == 1:
             result = r; ground = g; flag = 0
         else:
