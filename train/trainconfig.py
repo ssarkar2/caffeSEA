@@ -1,6 +1,6 @@
 
 class Config():
-    caffeSEAHome = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/caffeSEA'
+    caffeSEAHome = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/caffeSea2'
     
     #toy data 
     toyDataDir = ('/').join([caffeSEAHome, 'data/toyTrainingMatData'])

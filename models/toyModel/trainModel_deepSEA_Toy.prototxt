@@ -286,7 +286,7 @@ layer {
 layer {
   name: "loss"
   type: "SigmoidCrossEntropyLoss"
-  bottom: "softmax"
+  bottom: "fc5"
   bottom: "label"
   top: "loss"
   include {
