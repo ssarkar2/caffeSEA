@@ -5,6 +5,7 @@ import caffe
 from utils.loadDataUtils import *
 from utils.caffeUtils import *
 import h5py, math
+import scipy.io as sio
 
 '''
 test_np_array = np.random.random((5000, 919))
@@ -104,5 +105,13 @@ def evaluateModelTorch(hdf5FileName):
     #[0.90129743802985118, 0.93133001457163556, 0.83666147571507732]
 
 
+
+def evaluateModelDanQ(hdf5FileName, groundTruth):
+    f = h5py.File(hdf5FileName, 'r')
+    result = f['pred']
+    ground = sio.loadmat(groundTruth)['testdata']
+    auclist = generateROCplot(result, ground)
+    print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
+    print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
 
 
