@@ -21,6 +21,19 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into 
         if os.path.isfile(txtFile): return txtFile
 
     print matData
+    
+    """
+    short note on mat file loading in python (the try and except paths below)
+     matlab usually saves in 'v7' format. this format can only store files < 2gb. hence test.mat and valid.mat are in 'v7' form
+     train.mat is > 2gb, hence it is in 'v7.3' format.
+     v7.3 is basically a hdf5 file (u can open .mat files saved in this format using hdf5viewers etc)
+
+     v7 however is not in hdf5 format, (hence I was using scipy and not h5py to open that (the try path))
+
+     A simple way to unify the try/except paths is to convert 'test.mat' and 'valid.mat' to 'v7.3' and use h5py for everything
+
+    save('file.mat', 'var1', 'var2', '-v7.3')
+    """
     try:
         #matdata = sio.loadmat(matData)
         #[matDataName, matLabelName] = getDataNames(matdata.keys())
@@ -47,13 +60,11 @@ def convertMatToHDF5(matData, hdf5DataDir, readMode, split=10000):  #split into 
                     numInThisChunk = datasize[0] - (chunkCount-1)*split
                     endidx = None  #till the end
 
-
                 dataH5 = f.create_dataset('data', (numInThisChunk, datasize[1], datasize[2], datasize[3]), dtype='i1')  #i1 indicates 1byte sized integer.
                 dataH5[...] = swappedData[(chunkCount-1)*split : endidx][:][:][:]
                 labelH5 = f.create_dataset('label', (numInThisChunk, 919), dtype='i1')
                 labelH5[...] = matdata[matLabelName][(chunkCount-1)*split : endidx][:]
                 if endidx == None: break
-
     except:
         print 'scipy loading of mat file failed. using h5py'
         #matDataName = callMatlabDimensionConverter(matData)
