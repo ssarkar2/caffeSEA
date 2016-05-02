@@ -113,5 +113,12 @@ def evaluateModelDanQ(hdf5FileName, groundTruth):
     auclist = generateROCplot(result, ground)
     print np.mean(auclist[0]), np.mean(auclist[1]), np.mean(auclist[2])  #if some answer is nan, it means one of the values in the list was nan.
     print [np.mean([j for j in auclist[i] if not np.isnan(j)]) for i in [0,1,2]]
+    #model trained by us
+    #0.895608493235 nan 0.830510900882
+    #[0.89560849323545921, 0.90869146653964283, 0.83051090088168011]
+
+    #pretrained model from danQ github
+    #0.917704549947 nan 0.855518692958
+    #[0.91770454994678718, 0.95044046778055302, 0.85551869295806149]
 
 

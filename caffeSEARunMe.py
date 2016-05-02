@@ -21,7 +21,8 @@ if __name__ == '__main__':
         hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat_prelu.pred.h5'
         evaluateModelTorch(hdf5FileName)
     elif op == 4: #DanQ test
-        hdf5FileName = '/scratch0/sem4/cmsc702/danQ/DanQ/data/danq_pred_test.h5'
+        #hdf5FileName = '/scratch0/sem4/cmsc702/danQ/DanQ/data/danq_pred_test.h5'  #modl trained by us
+        hdf5FileName = '/scratch0/sem4/cmsc702/danQ/DanQ/data/danq_pred_test_githubmodel.h5'  #pretrained model
         ground = '../fullData/test.mat'
         evaluateModelDanQ(hdf5FileName, ground)
         
