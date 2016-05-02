@@ -16,9 +16,11 @@ if __name__ == '__main__':
 
 
         evaluateModel(dataDir + 'Model/model_defn_new.prototxt' ,'/scratch0/sem4/cmsc702/deepSEA/deepSEA_caffe/dumpModels_1/caffeSEAFull__iter_44000.caffemodel', dataDir + 'test.mat', dataDir + 'hdf5FullInputDir/', 'runlog.txt')
-    elif op == 3: #Torch text
-        #hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat.pred.h5'
-        hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat_prelu.pred.h5'
+    elif op == 3: #Torch test
+        #hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat.pred.h5' #predictions from model trained by us
+        #hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat_prelu.pred.h5' #predictions from model trained by us with modification (prelu instead of relu)
+        hdf5FileName = '/scratch0/sem4/cmsc702/deepSEA/deepSEA_orig/DeepSEA/testmat_pretrainedmodel.pred.h5'  #predictions from pretrained model
+        
         evaluateModelTorch(hdf5FileName)
     elif op == 4: #DanQ test
         #hdf5FileName = '/scratch0/sem4/cmsc702/danQ/DanQ/data/danq_pred_test.h5'  #modl trained by us
